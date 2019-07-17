@@ -39,18 +39,18 @@ class Example extends React.Component {
     return (
       <HorizontalLazyPagination
         data={[
-        { key: 'a'.repeat(6500) },
-        { key: 'b'.repeat(6500) },
-        { key: 'c'.repeat(6500) },
-        { key: 'd'.repeat(6500) },
-        { key: 'e'.repeat(6500) },
+          { key: 'a'.repeat(6500) },
+          { key: 'b'.repeat(6500) },
+          { key: 'c'.repeat(6500) },
+          { key: 'd'.repeat(6500) },
+          { key: 'e'.repeat(6500) },
         ]}
         onReleaseDragTouch={index => this.changeTopBarName(index + '')}
         initialIndex={2}
         renderRow={item => <Text>{item.key}</Text>}
       />
-      );
-    }
+    );
+  }
 }
 ```
 
