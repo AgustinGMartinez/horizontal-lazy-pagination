@@ -23,37 +23,37 @@ You can pass a property for each kind of ScrollView which contains props to be s
 
 ## Example
 
-```
+```JavaScript
 class Example extends React.Component {
-	changeTopBarName = name => {
-		Navigation.mergeOptions(this.props.componentId, {
-			topBar: {
-				title: {
-					text: name,
-				},
-			},
-		});
-	};
+  changeTopBarName = name => {
+    Navigation.mergeOptions(this.props.componentId, {
+      topBar: {
+        title: {
+          text: name,
+        },
+      },
+    });
+  };
 
-	render() {
-		return (
-			<HorizontalLazyPagination
-				data={[
-					{ key: 'a'.repeat(6500) },
-					{ key: 'b'.repeat(6500) },
-					{ key: 'c'.repeat(6500) },
-					{ key: 'd'.repeat(6500) },
-					{ key: 'e'.repeat(6500) },
-				]}
-				onReleaseDragTouch={index => this.changeTopBarName(index + '')}
-				initialIndex={2}
-				renderRow={item => <Text>{item.key}</Text>}
-			/>
-		);
-	}
+  render() {
+    return (
+      <HorizontalLazyPagination
+        data={[
+        { key: 'a'.repeat(6500) },
+        { key: 'b'.repeat(6500) },
+        { key: 'c'.repeat(6500) },
+        { key: 'd'.repeat(6500) },
+        { key: 'e'.repeat(6500) },
+        ]}
+        onReleaseDragTouch={index => this.changeTopBarName(index + '')}
+        initialIndex={2}
+        renderRow={item => <Text>{item.key}</Text>}
+      />
+      );
+    }
 }
 ```
 
-#### Result
+### Result
 
 ![](https://i.imgur.com/5zbZ47r.gif)
