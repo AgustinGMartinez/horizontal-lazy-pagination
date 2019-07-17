@@ -21,7 +21,7 @@ You can pass a property for each kind of ScrollView which contains props to be s
 | horizontalScrollViewProps |  object  |      -       |    no    | An object to be spread as props into the main wrapper (a ScrollView with the 'horizontal' and 'pagingEnabled' props turned on).                                                                                                            |
 | verticalScrollViewProps   |  object  |      -       |    no    | An object to be spread as props into the individual wrappers for each view (regular ScrollViews).                                                                                                                                          |
 
-#### Example
+## Example
 
 ```
 class Example extends React.Component {
