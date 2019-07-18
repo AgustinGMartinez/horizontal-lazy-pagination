@@ -10,7 +10,7 @@ class HorizontalLazyPagination extends React.Component {
 		onReleaseDragTouch: propTypes.func,
 		loader: propTypes.element,
 		horizontalScrollViewProps: propTypes.object,
-		verticalScrollViewProps: propTypes.object,
+		numberOfRenderedViews: propTypes.number,
 	};
 
 	static defaultProps = {
@@ -18,7 +18,7 @@ class HorizontalLazyPagination extends React.Component {
 		onReleaseDragTouch: () => {},
 		loader: <Text>Loading...</Text>,
 		horizontalScrollViewProps: {},
-		verticalScrollViewProps: {},
+		numberOfRenderedViews: 3,
 	};
 
 	state = {
@@ -27,7 +27,7 @@ class HorizontalLazyPagination extends React.Component {
 
 	goToInitialIndex = () => {
 		this.wrapper.scrollTo({
-			x: Dimensions.get('window').width * 2,
+			x: Dimensions.get('window').width * this.props.initialIndex,
 			animated: false,
 		});
 	};
@@ -50,21 +50,25 @@ class HorizontalLazyPagination extends React.Component {
 		let { central } = this.state;
 		let {
 			data,
-			verticalScrollViewProps,
+			numberOfRenderedViews,
 			horizontalScrollViewProps,
 			renderRow,
 		} = this.props;
 
-		data = data.filter((_, i) => {
-			return [central - 1, central, central + 1].includes(i);
+		const renderData = data.filter((_, i) => {
+			return (
+				i >= central - Math.round((numberOfRenderedViews - 1) / 2) &&
+				i <= central + Math.round((numberOfRenderedViews - 1) / 2)
+			);
 		});
 
 		// for hacking the index
 		const dummyDataBeforeTheContent = [];
 		const dummyDataAfterTheContent = [];
 
-		if (central > 1) {
-			const remainingDummySpaces = central - 1;
+		if (central >= 1) {
+			const remainingDummySpaces =
+				central - Math.round((numberOfRenderedViews - 1) / 2);
 			Array(remainingDummySpaces)
 				.fill(1)
 				.forEach(() => {
@@ -84,21 +88,11 @@ class HorizontalLazyPagination extends React.Component {
 				ref={view => (this.wrapper = view)}
 				onMomentumScrollEnd={this.handleScroll}
 				onLayout={this.goToInitialIndex}
-				{...verticalScrollViewProps}
+				{...horizontalScrollViewProps}
 			>
 				{dummyDataBeforeTheContent}
-				{data.map((item, index) => {
-					return (
-						<ScrollView
-							key={item.key}
-							style={s.page}
-							nestedScrollEnabled
-							showsVerticalScrollIndicator={false}
-							{...horizontalScrollViewProps}
-						>
-							{renderRow(item, index)}
-						</ScrollView>
-					);
+				{renderData.map((item, index) => {
+					return renderRow(item, index);
 				})}
 				{dummyDataAfterTheContent}
 			</ScrollView>
@@ -107,11 +101,6 @@ class HorizontalLazyPagination extends React.Component {
 }
 
 const s = StyleSheet.create({
-	page: {
-		width: Dimensions.get('window').width,
-		paddingHorizontal: 30,
-		paddingVertical: 30,
-	},
 	dummyPage: {
 		width: Dimensions.get('window').width,
 		flex: 1,
