@@ -4,10 +4,7 @@ React Native component for rendering an horizontal scroll view with lazy loading
 
 ## Docs
 
-This Horizontal ScrollView renders only the current view plus the 2 nearests views based on the data you provide.
-
-Horizontal Lazy Pagination is composed of 2 ScrollViews: an outer horizontal ScrollView and a vertical ScrollView for each element you pass in the data prop.
-You can pass a property for each kind of ScrollView which contains props to be spread into each one, as described as follows.
+The main wrapper for this component is a ScrollView with the 'horizontal' and 'pagingEnabled' props turned on. Usually, you will want to render your own vertical ScrollViews as childs for each view; for that to work, enable the 'nestedScrollEnabled' in your ScrollView's (see the example code for a reference).
 
 #### Props
 
@@ -15,11 +12,11 @@ You can pass a property for each kind of ScrollView which contains props to be s
 | ------------------------- | :------: | :----------: | :------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | data                      |  array   |      -       |   yes    | An array of data to be iterated.                                                                                                                                                                                                           |
 | renderRow                 | function |      -       |   yes    | A function to be called for every element in data that will be rendered. Receives the current iterating item and its index as the first 2 arguments. It must return a React Native element which will be wrapped by a vertical ScrollView. |
+| numberOfRenderedViews     |  number   |      3       |   no    | Number of pages that will be rendered before hand. 3 means "render the current view, the one before (if there is one) and one afterwards (if there is one)                                                                                                                                                                                                           |
 | initialIndex              |  number  |      0       |    no    | The index of the element of tha data array to be rendered as first view.                                                                                                                                                                   |
 | loader                    | element  | loading text |    no    | An element to be shown while lazy loading. This will be shown only if the user scrolls fast enough so that the next view is still loading.                                                                                                 |
 | onReleaseDragTouch        | function |      -       |    no    | A function that is triggered whenever the user stops dragging the view, even if the page doesn't end up changing. It passes the index of the current viewing element as an argument.                                                       |
 | horizontalScrollViewProps |  object  |      -       |    no    | An object to be spread as props into the main wrapper (a ScrollView with the 'horizontal' and 'pagingEnabled' props turned on).                                                                                                            |
-| verticalScrollViewProps   |  object  |      -       |    no    | An object to be spread as props into the individual wrappers for each view (regular ScrollViews).                                                                                                                                          |
 
 ## Example
 
@@ -47,11 +44,27 @@ class Example extends React.Component {
         ]}
         onReleaseDragTouch={index => this.changeTopBarName(index + '')}
         initialIndex={2}
-        renderRow={item => <Text>{item.key}</Text>}
+        renderRow={(item, index) => (
+            <ScrollView key={index} style={s.page} nestedScrollEnabled showsVerticalScrollIndicator={false}>
+              <Text>{item.key}</Text>
+            </ScrollView>
+          )
+        }
+        numberOfRenderedViews={3}
       />
     );
   }
 }
+
+const s = StyleSheet.create({
+	page: {
+		paddingTop: 30,
+		paddingBottom: 30,
+		paddingLeft: 20,
+		paddingRight: 20,
+		width: Dimensions.get('window').width,
+	},
+});
 ```
 
 ### Result
